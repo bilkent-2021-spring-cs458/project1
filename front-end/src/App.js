@@ -1,6 +1,6 @@
 import React from "react";
-import SignUp from "./SignUp";
+import Landing from "./pages/Landing.js";
 
 export default function App() {
-    return <SignUp />;
+    return <Landing />;
 }
