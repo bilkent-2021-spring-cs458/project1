@@ -1,5 +1,6 @@
 import React from "react";
 import { makeStyles, TextField } from "@material-ui/core";
+import PropTypes from "prop-types";
 
 const useStyles = makeStyles({
     root: {
@@ -13,15 +14,16 @@ const useStyles = makeStyles({
             borderColor: "#0071eb",
         },
         "& .MuiInputBase-root.Nf-validated": {
+            // TODO
             borderColor: "#5fa53f",
         },
         "& .MuiInputBase-root.Mui-error": {
             borderBottom: "2px solid #ffa00a",
         },
         "& .MuiFormHelperText-root": {
-            color: "#ffa00a",
             textAlign: "left",
-            fontSize: "15px",
+            marginLeft: 0,
+            paddingLeft: "3px",
         },
         "& .MuiFormLabel-root": {
             color: "#8c8c8c",
@@ -34,14 +36,20 @@ const useStyles = makeStyles({
 });
 
 export default function NfTextField(props) {
+    const { className, ...otherProps } = props;
     const classes = useStyles();
+
     return (
         <TextField
+            {...otherProps}
             variant="filled"
-            className={classes.root}
+            className={(className ? className + " " : "") + classes.root}
             InputProps={{ disableUnderline: true }}
             FormHelperTextProps={{ className: classes.helperText }}
-            {...props}
         />
     );
 }
+
+NfTextField.propTypes = {
+    className: PropTypes.string,
+};

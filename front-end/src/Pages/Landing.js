@@ -8,11 +8,12 @@ import {
     Typography,
 } from "@material-ui/core";
 import { ChevronRight } from "@material-ui/icons";
-import React, { useEffect, useRef, useState } from "react";
+import React from "react";
+
 import logo from "../assets/logo.svg";
 import backgroundImg from "../assets/background.jpg";
 import NfRedButton from "../components/NfRedButton";
-import NfTextField from "../components/NfTextField";
+import NfValidatedTextField from "../components/NfValidatedTextField";
 
 const useStyles = makeStyles({
     paper: {
@@ -35,6 +36,12 @@ const useStyles = makeStyles({
     centerForm: {
         padding: "150px 50px 0",
     },
+    textField: {
+        "& .MuiFormHelperText-root": {
+            color: "#ffa00a",
+            fontSize: "15px",
+        },
+    },
 });
 
 const WhiteTypography = withStyles({
@@ -44,35 +51,6 @@ const WhiteTypography = withStyles({
 })(Typography);
 
 export default function Landing() {
-    const [email, setEmail] = useState("");
-    const [error, setError] = useState("");
-
-    // Validating Email
-    const validateEmail = function () {
-        if (email.length < 5) {
-            setError("Email is required!");
-            return;
-        }
-
-        const pattern = /\S+@\S+\.\S+/;
-        if (!pattern.test(email)) {
-            setError("Please enter a valid email address");
-            return;
-        }
-        setError("");
-    };
-
-    const emailEntered = useRef(false);
-    useEffect(() => {
-        // Do not validate when the page loads
-        if (!emailEntered.current) {
-            emailEntered.current = true;
-            return;
-        }
-
-        validateEmail();
-    }, [email]);
-
     const classes = useStyles();
     return (
         <div className={classes.paper}>
@@ -87,7 +65,7 @@ export default function Landing() {
 
             <Container maxWidth="sm" className={classes.centerForm}>
                 <WhiteTypography paragraph variant="h3" align="center">
-                    <Box fontWeight="Bold">
+                    <Box fontWeight="Bold" component="span">
                         Unlimited movies, TV shows, and more.
                     </Box>
                 </WhiteTypography>
@@ -99,16 +77,12 @@ export default function Landing() {
                         Ready to watch? Enter your email to create or restart
                         your membership.
                     </WhiteTypography>
-                    <NfTextField
+                    <NfValidatedTextField
+                        type="email"
                         fullWidth
                         label="Email address"
-                        type="email"
-                        autoComplete="email"
-                        inputProps={{ minLength: 5, maxLength: 50 }}
                         required
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        helperText={error}
+                        className={classes.textField}
                     />
                     <br />
                     <NfRedButton

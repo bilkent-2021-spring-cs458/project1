@@ -25,5 +25,5 @@ const StyledButton = withStyles({
 })(Button);
 
 export default function NfRedButton(props) {
-    return <StyledButton disableRipple {...props} />;
+    return <StyledButton {...props} disableRipple />;
 }
