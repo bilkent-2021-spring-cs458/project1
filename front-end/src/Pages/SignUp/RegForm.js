@@ -6,7 +6,7 @@ import {
     Typography,
 } from "@material-ui/core";
 import { CheckBoxOutlineBlank, CheckBoxOutlined } from "@material-ui/icons";
-import React from "react";
+import React, { useState } from "react";
 import PropTypes from "prop-types";
 import NfRedButton from "../../components/NfRedButton";
 import NfValidatedTextField from "../../components/NfValidatedTextField";
@@ -20,10 +20,13 @@ const useStyles = makeStyles({
 });
 
 export default function RegForm({ classes }) {
-    const myClasses = useStyles();
+    const [shouldValidate, setShouldValidate] = useState(false);
+    const submit = () => {
+        setShouldValidate(true);
+    };
 
     // TODO If already registered, show different content
-
+    const myClasses = useStyles();
     return (
         <form>
             <Container maxWidth="xs">
@@ -45,6 +48,7 @@ export default function RegForm({ classes }) {
                     label="Email"
                     required
                     className={classes.textField}
+                    shouldValidate={shouldValidate}
                 />
                 <NfValidatedTextField
                     type="password"
@@ -52,6 +56,7 @@ export default function RegForm({ classes }) {
                     label="Add a password"
                     required
                     className={classes.textField}
+                    shouldValidate={shouldValidate}
                 />
                 <FormControlLabel
                     control={
@@ -71,9 +76,9 @@ export default function RegForm({ classes }) {
                 />
 
                 <NfRedButton
-                    type="submit"
                     fullWidth
                     style={{ marginTop: "24px", minHeight: "48px" }}
+                    onClick={submit}
                 >
                     Continue
                 </NfRedButton>

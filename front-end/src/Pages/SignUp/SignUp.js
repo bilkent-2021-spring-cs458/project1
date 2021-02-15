@@ -8,6 +8,7 @@ import {
 } from "@material-ui/core";
 import React from "react";
 import logo from "../../assets/logo.svg";
+import PlanForm from "./PlanForm";
 import RegForm from "./RegForm";
 import Registration from "./Registration";
 import Step2 from "./Step2";
@@ -88,6 +89,7 @@ export default function SignUp() {
             </AppBar>
 
             <Container style={{ paddingTop: 20 }}>
+                <PlanForm classes={classes} />
                 <Step2 classes={classes} />
                 <RegForm classes={classes} />
                 <Registration classes={classes} />

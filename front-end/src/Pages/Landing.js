@@ -8,7 +8,7 @@ import {
     Typography,
 } from "@material-ui/core";
 import { ChevronRight } from "@material-ui/icons";
-import React from "react";
+import React, { useState } from "react";
 
 import logo from "../assets/logo.svg";
 import backgroundImg from "../assets/background.jpg";
@@ -51,6 +51,11 @@ const WhiteTypography = withStyles({
 })(Typography);
 
 export default function Landing() {
+    const [shouldValidate, setShouldValidate] = useState(false);
+    const submit = () => {
+        setShouldValidate(true);
+    };
+
     const classes = useStyles();
     return (
         <div className={classes.paper}>
@@ -83,12 +88,13 @@ export default function Landing() {
                         label="Email address"
                         required
                         className={classes.textField}
+                        shouldValidate={shouldValidate}
                     />
                     <br />
                     <NfRedButton
-                        type="submit"
                         endIcon={<ChevronRight />}
                         style={{ minHeight: "40px" }}
+                        onClick={submit}
                     >
                         GET STARTED
                     </NfRedButton>
