@@ -6,7 +6,7 @@ export function validateEmail(email) {
         return "Email should be between 5 and 50 characters";
     }
 
-    const pattern = /\S+@\S+\.\S+/;
+    const pattern = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
     if (!pattern.test(email)) {
         return "Please enter a valid email address";
     }
