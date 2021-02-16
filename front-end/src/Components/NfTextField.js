@@ -13,8 +13,7 @@ const useStyles = makeStyles({
         "& .MuiInputBase-root.Mui-focused": {
             borderColor: "#0071eb",
         },
-        "& .MuiInputBase-root.Nf-validated": {
-            // TODO
+        "&.Nf-validated .MuiInputBase-root": {
             borderColor: "#5fa53f",
         },
         "& .MuiInputBase-root.Mui-error": {
@@ -36,12 +35,13 @@ const useStyles = makeStyles({
 });
 
 export default function NfTextField(props) {
-    const { className, ...otherProps } = props;
+    const { className, forwardedRef, ...otherProps } = props;
     const classes = useStyles();
 
     return (
         <TextField
             {...otherProps}
+            ref={forwardedRef}
             variant="filled"
             className={(className ? className + " " : "") + classes.root}
             InputProps={{ disableUnderline: true }}
@@ -52,4 +52,5 @@ export default function NfTextField(props) {
 
 NfTextField.propTypes = {
     className: PropTypes.string,
+    forwardedRef: PropTypes.object,
 };

@@ -1,0 +1,182 @@
+import {
+    AppBar,
+    Box,
+    Container,
+    makeStyles,
+    withStyles,
+    Typography,
+    Checkbox,
+    FormControlLabel,
+    SvgIcon,
+} from "@material-ui/core";
+import { CheckBox } from "@material-ui/icons";
+import React, { useState } from "react";
+import logo from "../assets/logo.svg";
+import NfRedButton from "../components/NfRedButton";
+import NfValidatedTextField from "../components/NfValidatedTextField";
+import backgroundImg from "../assets/background.jpg";
+import { Link } from "react-router-dom";
+
+const useStyles = makeStyles({
+    paper: {
+        backgroundImage: `linear-gradient(to top,
+			rgba(0,0,0,.8) 0,
+			rgba(0,0,0,.4) 60%,
+			rgba(0,0,0,.8) 100%), url(${backgroundImg})`,
+        height: 750,
+    },
+    header: {
+        boxShadow: "none",
+        background: "transparent",
+        height: "90px",
+        padding: "25px",
+    },
+    centerForm: {
+        padding: "60px 68px 123px",
+        background: "rgba(0, 0, 0, 0.75)",
+    },
+    textField: {
+        paddingBottom: "16px",
+        "& .MuiFormHelperText-root": {
+            color: "#e87c03",
+            fontSize: "13px",
+        },
+        "& .MuiInputBase-root": {
+            backgroundColor: "rgb(51, 51, 51)",
+            borderRadius: "4px",
+            borderColor: "rgb(51, 51, 51)",
+        },
+        "& .MuiInputBase-input": {
+            color: "white",
+        },
+        "& .MuiInputBase-root.Mui-focused": {
+            backgroundColor: "rgb(69, 69, 69)",
+            borderTopColor: "rgb(69, 69, 69)",
+            borderLeftColor: "rgb(69, 69, 69)",
+            borderRightColor: "rgb(69, 69, 69)",
+        },
+        "& .MuiInputBase-root.Mui-focused:not(.Mui-error)": {
+            borderBottomColor: "rgb(69, 69, 69)",
+        },
+    },
+    checkbox: {
+        fontSize: "25px",
+        color: "#737373",
+        paddingRight: "0",
+        "&:hover": {
+            backgroundColor: "transparent !important",
+        },
+    },
+    remember: {
+        color: "#b3b3b3",
+        flexGrow: 1,
+        "& .MuiTypography-root": {
+            fontSize: "13px",
+        },
+    },
+    link: {
+        color: "white",
+        cursor: "pointer",
+        textDecoration: "none",
+        "&:hover": {
+            textDecoration: "underline",
+        },
+    },
+    help: {
+        paddingTop: "10px",
+        color: "#b3b3b3",
+        fontSize: "13px",
+    },
+});
+
+const WhiteTypography = withStyles({
+    root: {
+        color: "white",
+    },
+})(Typography);
+
+export default function SignIn() {
+    const [shouldValidate, setShouldValidate] = useState(false);
+    const submit = () => {
+        setShouldValidate(true);
+    };
+
+    const classes = useStyles();
+    return (
+        <div className={classes.paper}>
+            <AppBar position="static" className={classes.header}>
+                <Box>
+                    <Link to="/">
+                        <img height="44" src={logo} alt="logo" />
+                    </Link>
+                </Box>
+            </AppBar>
+
+            <Container maxWidth="xs" className={classes.centerForm}>
+                <form>
+                    <WhiteTypography paragraph variant="h4">
+                        <Box fontWeight="Bold">Sign In</Box>
+                    </WhiteTypography>
+                    <NfValidatedTextField
+                        type="email"
+                        fullWidth
+                        label="Email"
+                        required
+                        className={classes.textField}
+                        shouldValidate={shouldValidate}
+                    />
+                    <NfValidatedTextField
+                        type="password"
+                        fullWidth
+                        label="Password"
+                        required
+                        className={classes.textField}
+                        shouldValidate={shouldValidate}
+                    />
+                    <NfRedButton
+                        fullWidth
+                        style={{ marginTop: "24px", minHeight: "48px" }}
+                        onClick={{ submit }}
+                    >
+                        Sign In
+                    </NfRedButton>
+
+                    <div style={{ display: "flex" }}>
+                        <FormControlLabel
+                            control={
+                                <Checkbox
+                                    disableRipple
+                                    className={classes.checkbox}
+                                    icon={
+                                        <SvgIcon fontSize="inherit">
+                                            <path d="M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.11 0 2-.9 2-2V5c0-1.1-.89-2-2-2zm-9" />
+                                        </SvgIcon>
+                                    }
+                                    checkedIcon={
+                                        <CheckBox fontSize="inherit" />
+                                    }
+                                    color="inherit"
+                                />
+                            }
+                            className={classes.remember}
+                            label="Remember me"
+                        />
+                        <a className={classes.link + " " + classes.help}>
+                            Need help?
+                        </a>
+                    </div>
+                </form>
+
+                <br />
+                <div style={{ color: "#737373" }}>
+                    New to Netflix?&nbsp;
+                    <Link to="/">
+                        <a href="#" className={classes.link}>
+                            Sign up now
+                        </a>
+                    </Link>
+                </div>
+            </Container>
+        </div>
+    );
+}

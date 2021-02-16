@@ -12,6 +12,7 @@ import PropTypes from "prop-types";
 import NfRedButton from "../../components/NfRedButton";
 import checkmarkImg from "../../assets/Checkmark.png";
 import { Check } from "@material-ui/icons";
+import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles({
     checkmarkLogo: {
@@ -20,6 +21,7 @@ const useStyles = makeStyles({
 });
 
 export default function Step2({ classes }) {
+    const history = useHistory();
     const myClasses = useStyles();
     return (
         <Container maxWidth="xs" className={classes.centerContent}>
@@ -59,6 +61,7 @@ export default function Step2({ classes }) {
             <NfRedButton
                 fullWidth
                 style={{ marginTop: "24px", minHeight: "48px" }}
+                onClick={() => history.push("/signup/planform")}
             >
                 See the Plans
             </NfRedButton>

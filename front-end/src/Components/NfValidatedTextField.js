@@ -4,7 +4,7 @@ import { validateEmail, validatePassword } from "../validators";
 import NfTextField from "./NfTextField";
 
 export default function NfValidatedTextField(props) {
-    const { shouldValidate, ...otherProps } = props;
+    const { shouldValidate, initialValue, ...otherProps } = props;
     let validator, minLength, maxLength;
     if (props.type == "email") {
         validator = validateEmail;
@@ -15,8 +15,9 @@ export default function NfValidatedTextField(props) {
         minLength = 4;
         maxLength = 60;
     }
-    const [value, setValue] = useState("");
+    const [value, setValue] = useState(initialValue ? initialValue : "");
     const [error, setError] = useState("");
+    const textField = useRef(null);
 
     const valueEntered = useRef(false);
     const validate = () => {
@@ -29,11 +30,13 @@ export default function NfValidatedTextField(props) {
         const isValid = validator(value);
         if (isValid !== true) {
             setError(isValid);
+            textField.current.classList.remove("Nf-validated");
         } else {
             setError("");
+            textField.current.classList.add("Nf-validated");
         }
     };
-    useEffect(validate, [value, shouldValidate]);
+    useEffect(validate, [value, shouldValidate, validator]);
 
     return (
         <NfTextField
@@ -43,6 +46,7 @@ export default function NfValidatedTextField(props) {
             onChange={(e) => setValue(e.target.value)}
             error={error.length > 0}
             helperText={error}
+            forwardedRef={textField}
             {...otherProps}
         />
     );
@@ -51,6 +55,7 @@ export default function NfValidatedTextField(props) {
 NfValidatedTextField.propTypes = {
     shouldValidate: PropTypes.bool,
     type: PropTypes.oneOf(["email", "password"]).isRequired,
+    initialValue: PropTypes.string,
 };
 NfValidatedTextField.defaultProps = {
     shouldValidate: false,

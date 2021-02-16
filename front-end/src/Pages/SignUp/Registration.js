@@ -3,6 +3,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import NfRedButton from "../../components/NfRedButton";
 import devicesImg from "../../assets/Devices.png";
+import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles({
     devicesLogo: {
@@ -11,6 +12,7 @@ const useStyles = makeStyles({
 });
 
 export default function Registration({ classes }) {
+    const history = useHistory();
     const myClasses = useStyles();
     return (
         <Container maxWidth="xs" className={classes.centerContent}>
@@ -32,6 +34,7 @@ export default function Registration({ classes }) {
             <NfRedButton
                 fullWidth
                 style={{ marginTop: "24px", minHeight: "48px" }}
+                onClick={() => history.push("/signup/regform")}
             >
                 Continue
             </NfRedButton>

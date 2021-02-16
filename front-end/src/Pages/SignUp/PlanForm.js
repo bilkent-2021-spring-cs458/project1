@@ -8,7 +8,7 @@ import {
     TableRow,
     Typography,
 } from "@material-ui/core";
-import React from "react";
+import React, { useState } from "react";
 import PropTypes from "prop-types";
 import NfRedButton from "../../components/NfRedButton";
 import { Check } from "@material-ui/icons";
@@ -69,6 +69,13 @@ const useStyles = makeStyles({
 });
 
 export default function PlanForm({ classes }) {
+    const [plan, setPlan] = useState(1);
+    const submit = (e) => {
+        e.preventDefault();
+        console.log("Plan: " + plan);
+        window.location.href = "/";
+    };
+
     const handleTableClick = (event) => {
         const target = event.target;
         if (!target || !target.classList) return;
@@ -84,10 +91,9 @@ export default function PlanForm({ classes }) {
         );
         if (selectionIndex > 0) {
             const table = parentCell.parentNode.parentNode.parentNode;
-            table.classList.remove("SelectedPlan1");
-            table.classList.remove("SelectedPlan2");
-            table.classList.remove("SelectedPlan3");
+            table.classList.remove("SelectedPlan" + plan);
             table.classList.add("SelectedPlan" + selectionIndex);
+            setPlan(selectionIndex);
         }
     };
 
@@ -218,6 +224,7 @@ export default function PlanForm({ classes }) {
                         width: "50%",
                         marginLeft: "25%",
                     }}
+                    onClick={submit}
                 >
                     Continue
                 </NfRedButton>

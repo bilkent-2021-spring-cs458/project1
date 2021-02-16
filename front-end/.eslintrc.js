@@ -17,8 +17,10 @@ module.exports = {
         ecmaVersion: 12,
         sourceType: "module",
     },
-    plugins: ["react"],
+    plugins: ["react", "react-hooks"],
     rules: {
         "no-unused-vars": "warn",
+        "react-hooks/rules-of-hooks": "error",
+        "react-hooks/exhaustive-deps": "warn",
     },
 };

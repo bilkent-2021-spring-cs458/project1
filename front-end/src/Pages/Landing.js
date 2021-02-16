@@ -14,6 +14,8 @@ import logo from "../assets/logo.svg";
 import backgroundImg from "../assets/background.jpg";
 import NfRedButton from "../components/NfRedButton";
 import NfValidatedTextField from "../components/NfValidatedTextField";
+import { useHistory } from "react-router-dom";
+import { validateEmail } from "../validators";
 
 const useStyles = makeStyles({
     paper: {
@@ -51,9 +53,18 @@ const WhiteTypography = withStyles({
 })(Typography);
 
 export default function Landing() {
+    const history = useHistory();
     const [shouldValidate, setShouldValidate] = useState(false);
-    const submit = () => {
-        setShouldValidate(true);
+    const submit = (e) => {
+        e.preventDefault();
+        const email = e.target.email.value;
+        const isValid = validateEmail(email);
+        if (isValid !== true) {
+            return;
+        }
+
+        sessionStorage.setItem("email", email);
+        history.push("/signup/registration");
     };
 
     const classes = useStyles();
@@ -64,7 +75,9 @@ export default function Landing() {
                     <Box className={classes.logoBox}>
                         <img height="36" src={logo} alt="logo" />
                     </Box>
-                    <NfRedButton>Sign In</NfRedButton>
+                    <NfRedButton onClick={() => history.push("/signin")}>
+                        Sign In
+                    </NfRedButton>
                 </Toolbar>
             </AppBar>
 
@@ -77,24 +90,27 @@ export default function Landing() {
                 <WhiteTypography paragraph variant="h5" align="center">
                     Watch anywhere. Cancel anytime.
                 </WhiteTypography>
-                <form align="center">
+                <form align="center" onSubmit={submit}>
                     <WhiteTypography gutterBottom variant="h5" align="center">
                         Ready to watch? Enter your email to create or restart
                         your membership.
                     </WhiteTypography>
                     <NfValidatedTextField
                         type="email"
+                        name="email"
                         fullWidth
                         label="Email address"
                         required
                         className={classes.textField}
                         shouldValidate={shouldValidate}
+                        initialValue={sessionStorage.getItem("email")}
                     />
                     <br />
                     <NfRedButton
+                        type="submit"
                         endIcon={<ChevronRight />}
                         style={{ minHeight: "40px" }}
-                        onClick={submit}
+                        onClick={() => setShouldValidate(true)}
                     >
                         GET STARTED
                     </NfRedButton>

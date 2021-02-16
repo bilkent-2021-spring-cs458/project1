@@ -10,6 +10,8 @@ import React, { useState } from "react";
 import PropTypes from "prop-types";
 import NfRedButton from "../../components/NfRedButton";
 import NfValidatedTextField from "../../components/NfValidatedTextField";
+import { validateEmail, validatePassword } from "../../validators";
+import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles({
     checkbox: {
@@ -20,15 +22,29 @@ const useStyles = makeStyles({
 });
 
 export default function RegForm({ classes }) {
+    const history = useHistory();
     const [shouldValidate, setShouldValidate] = useState(false);
-    const submit = () => {
-        setShouldValidate(true);
+    const submit = (e) => {
+        e.preventDefault();
+        const email = e.target.email.value;
+        const password = e.target.password.value;
+        const emailPreference = e.target.emailPreference.checked;
+        const isEmailValid = validateEmail(email);
+        const isPasswordValid = validatePassword(password);
+        if (isEmailValid !== true || isPasswordValid !== true) {
+            return;
+        }
+
+        console.log(email);
+        console.log(password);
+        console.log(emailPreference);
+        history.push("/signup");
     };
 
     // TODO If already registered, show different content
     const myClasses = useStyles();
     return (
-        <form>
+        <form onSubmit={submit}>
             <Container maxWidth="xs">
                 <span className={classes.stepIndicator}>
                     STEP <b>1</b> OF <b>3</b>
@@ -44,14 +60,17 @@ export default function RegForm({ classes }) {
 
                 <NfValidatedTextField
                     type="email"
+                    name="email"
                     fullWidth
                     label="Email"
                     required
                     className={classes.textField}
                     shouldValidate={shouldValidate}
+                    initialValue={sessionStorage.getItem("email")}
                 />
                 <NfValidatedTextField
                     type="password"
+                    name="password"
                     fullWidth
                     label="Add a password"
                     required
@@ -70,15 +89,17 @@ export default function RegForm({ classes }) {
                                 />
                             }
                             className={myClasses.checkbox}
+                            name="emailPreference"
                         />
                     }
                     label="Please do not email me Netflix special offers."
                 />
 
                 <NfRedButton
+                    type="submit"
                     fullWidth
                     style={{ marginTop: "24px", minHeight: "48px" }}
-                    onClick={submit}
+                    onClick={() => setShouldValidate(true)}
                 >
                     Continue
                 </NfRedButton>

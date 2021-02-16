@@ -6,12 +6,15 @@ import {
     makeStyles,
     Toolbar,
 } from "@material-ui/core";
-import React from "react";
+import React, { useRef } from "react";
+import { BrowserRouter as Router, Route } from "react-router-dom";
+import { CSSTransition } from "react-transition-group";
 import logo from "../../assets/logo.svg";
 import PlanForm from "./PlanForm";
 import RegForm from "./RegForm";
 import Registration from "./Registration";
 import Step2 from "./Step2";
+import "../../stylesheet/SignUp.css";
 
 const useStyles = makeStyles({
     header: {
@@ -67,33 +70,70 @@ const useStyles = makeStyles({
 });
 
 export default function SignUp() {
+    const routes = [
+        {
+            path: "/signup/registration",
+            Component: Registration,
+            ref: useRef(null),
+        },
+        {
+            path: "/signup/regform",
+            Component: RegForm,
+            ref: useRef(null),
+        },
+        {
+            path: "/signup",
+            Component: Step2,
+            ref: useRef(null),
+        },
+        {
+            path: "/signup/planform",
+            Component: PlanForm,
+            ref: useRef(null),
+        },
+    ];
     const classes = useStyles();
     return (
         <>
-            <AppBar position="static" className={classes.header}>
-                <Toolbar style={{ padding: 0 }}>
-                    <Box className={classes.logoBox}>
-                        <Link href="#" className={classes.headerLink}>
-                            <img
-                                align="center"
-                                height="45"
-                                src={logo}
-                                alt="logo"
-                            />
+            <Router>
+                <AppBar position="static" className={classes.header}>
+                    <Toolbar style={{ padding: 0 }}>
+                        <Box className={classes.logoBox}>
+                            <Link href="/" className={classes.headerLink}>
+                                <img
+                                    align="center"
+                                    height="45"
+                                    src={logo}
+                                    alt="logo"
+                                />
+                            </Link>
+                        </Box>
+                        <Link href="/signin" className={classes.headerLink}>
+                            Sign In
                         </Link>
-                    </Box>
-                    <Link href="#" className={classes.headerLink}>
-                        Sign In
-                    </Link>
-                </Toolbar>
-            </AppBar>
+                    </Toolbar>
+                </AppBar>
 
-            <Container style={{ paddingTop: 20 }}>
-                <PlanForm classes={classes} />
-                <Step2 classes={classes} />
-                <RegForm classes={classes} />
-                <Registration classes={classes} />
-            </Container>
+                <Container style={{ paddingTop: 20 }}>
+                    {routes.map(({ path, Component, ref }) => (
+                        <Route key={path} exact path={path}>
+                            {({ match }) => (
+                                <CSSTransition
+                                    nodeRef={ref}
+                                    in={match != null}
+                                    timeout={500}
+                                    classNames="transition"
+                                    unmountOnExit
+                                >
+                                    <div className="transition" ref={ref}>
+                                        <Component classes={classes} />
+                                    </div>
+                                </CSSTransition>
+                            )}
+                        </Route>
+                    ))}
+                </Container>
+            </Router>
         </>
     );
 }
