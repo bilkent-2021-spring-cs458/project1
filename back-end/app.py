@@ -33,7 +33,17 @@ def signup():
     prog = re.compile(regex)
     if not prog.match(email):
         return 'Invalid email address'
+
     cursor = mysql.connection.cursor()
+
+    cursor.execute("CREATE TABLE IF NOT EXISTS `users` ("
+                   "  `name` varchar(45) NOT NULL,"
+                   "  `surname` varchar(45) NOT NULL,"
+                   "  `email` varchar(45) NOT NULL,"
+                   "  `password` varchar(64) NOT NULL,"
+                   "  PRIMARY KEY (`email`)"
+                   ") ENGINE=InnoDB")
+
     cursor.execute("SELECT * FROM users WHERE email=%s", (email,))
     if cursor.fetchone() is not None:
         return 'User already signed up'
