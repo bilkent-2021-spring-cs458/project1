@@ -16,7 +16,7 @@ import NfRedButton from "../components/NfRedButton";
 import NfValidatedTextField from "../components/NfValidatedTextField";
 import backgroundImg from "../assets/background.jpg";
 import { Link } from "react-router-dom";
-import { login } from "../service/Service";
+import { signin } from "../service/Service";
 import { validateEmail, validatePassword } from "../validators";
 
 const useStyles = makeStyles({
@@ -100,7 +100,7 @@ const WhiteTypography = withStyles({
 export default function SignIn() {
     const [shouldValidate, setShouldValidate] = useState(false);
     const submit = (e) => {
-        setShouldValidate(true);
+        e.preventDefault();
         const email = e.target.email.value;
         const password = e.target.password.value;
         const remember = e.target.remember.checked;
@@ -113,13 +113,10 @@ export default function SignIn() {
         console.log(email);
         console.log(password);
         console.log(remember);
-        login({
+        signin({
             email,
             password,
-        }).then((response) => {
-            console.log(response);
-            window.location.href = "/";
-        });
+        }).then(() => (window.location.href = "/"));
     };
 
     const classes = useStyles();
@@ -134,7 +131,7 @@ export default function SignIn() {
             </AppBar>
 
             <Container maxWidth="xs" className={classes.centerForm}>
-                <form>
+                <form onSubmit={submit}>
                     <WhiteTypography paragraph variant="h4">
                         <Box fontWeight="Bold" component="span">
                             Sign In
@@ -159,9 +156,10 @@ export default function SignIn() {
                         shouldValidate={shouldValidate}
                     />
                     <NfRedButton
+                        type="submit"
                         fullWidth
                         style={{ marginTop: "24px", minHeight: "48px" }}
-                        onClick={submit}
+                        onClick={() => setShouldValidate(true)}
                     >
                         Sign In
                     </NfRedButton>

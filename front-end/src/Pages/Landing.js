@@ -8,7 +8,7 @@ import {
     Typography,
 } from "@material-ui/core";
 import { ChevronRight } from "@material-ui/icons";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import logo from "../assets/logo.svg";
 import backgroundImg from "../assets/background.jpg";
@@ -16,6 +16,7 @@ import NfRedButton from "../components/NfRedButton";
 import NfValidatedTextField from "../components/NfValidatedTextField";
 import { useHistory } from "react-router-dom";
 import { validateEmail } from "../validators";
+import { getUserDetails, signout } from "../service/Service";
 
 const useStyles = makeStyles({
     paper: {
@@ -67,6 +68,16 @@ export default function Landing() {
         history.push("/signup/registration");
     };
 
+    const [userDetails, setUserDetails] = useState({});
+    useEffect(() => {
+        if (sessionStorage.getItem("isSignedIn")) {
+            getUserDetails().then((response) => {
+                setUserDetails(response);
+                console.log(response);
+            });
+        }
+    }, []);
+
     const classes = useStyles();
     return (
         <div className={classes.paper}>
@@ -75,46 +86,87 @@ export default function Landing() {
                     <Box className={classes.logoBox}>
                         <img height="36" src={logo} alt="logo" />
                     </Box>
-                    <NfRedButton onClick={() => history.push("/signin")}>
-                        Sign In
-                    </NfRedButton>
+                    {!sessionStorage.getItem("isSignedIn") && (
+                        <NfRedButton onClick={() => history.push("/signin")}>
+                            Sign In
+                        </NfRedButton>
+                    )}
+                    {sessionStorage.getItem("isSignedIn") && (
+                        <NfRedButton
+                            onClick={() => {
+                                signout().then(
+                                    () => (window.location.href = "/")
+                                );
+                            }}
+                        >
+                            Sign out
+                        </NfRedButton>
+                    )}
                 </Toolbar>
             </AppBar>
 
             <Container maxWidth="sm" className={classes.centerForm}>
-                <WhiteTypography paragraph variant="h3" align="center">
-                    <Box fontWeight="Bold" component="span">
-                        Unlimited movies, TV shows, and more.
-                    </Box>
-                </WhiteTypography>
-                <WhiteTypography paragraph variant="h5" align="center">
-                    Watch anywhere. Cancel anytime.
-                </WhiteTypography>
-                <form align="center" onSubmit={submit}>
-                    <WhiteTypography gutterBottom variant="h5" align="center">
-                        Ready to watch? Enter your email to create or restart
-                        your membership.
+                {!sessionStorage.getItem("isSignedIn") && (
+                    <form align="center" onSubmit={submit}>
+                        <WhiteTypography paragraph variant="h3" align="center">
+                            <Box fontWeight="Bold" component="span">
+                                Unlimited movies, TV shows, and more.
+                            </Box>
+                        </WhiteTypography>
+                        <WhiteTypography paragraph variant="h5" align="center">
+                            Watch anywhere. Cancel anytime.
+                        </WhiteTypography>
+                        <WhiteTypography
+                            gutterBottom
+                            variant="h5"
+                            align="center"
+                        >
+                            Ready to watch? Enter your email to create or
+                            restart your membership.
+                        </WhiteTypography>
+                        <NfValidatedTextField
+                            type="email"
+                            name="email"
+                            fullWidth
+                            label="Email address"
+                            required
+                            className={classes.textField}
+                            shouldValidate={shouldValidate}
+                            initialValue={sessionStorage.getItem("email")}
+                        />
+                        <br />
+                        <NfRedButton
+                            type="submit"
+                            endIcon={<ChevronRight />}
+                            style={{ minHeight: "40px" }}
+                            onClick={() => setShouldValidate(true)}
+                        >
+                            GET STARTED
+                        </NfRedButton>
+                    </form>
+                )}
+                {sessionStorage.getItem("isSignedIn") && (
+                    <WhiteTypography paragraph variant="h4">
+                        <Box fontWeight="Bold" component="span">
+                            You are currently signed in.
+                            <br />
+                            Your user details:
+                            <br />
+                            <br />
+                            Email:&nbsp;
+                            {userDetails ? userDetails.email : ""}
+                            <br />
+                            Name:&nbsp;
+                            {userDetails ? userDetails.name : ""}
+                            <br />
+                            Surname:&nbsp;
+                            {userDetails ? userDetails.surname : ""}
+                            <br />
+                            Payment Plan:&nbsp;
+                            {userDetails ? userDetails.plan : ""}
+                        </Box>
                     </WhiteTypography>
-                    <NfValidatedTextField
-                        type="email"
-                        name="email"
-                        fullWidth
-                        label="Email address"
-                        required
-                        className={classes.textField}
-                        shouldValidate={shouldValidate}
-                        initialValue={sessionStorage.getItem("email")}
-                    />
-                    <br />
-                    <NfRedButton
-                        type="submit"
-                        endIcon={<ChevronRight />}
-                        style={{ minHeight: "40px" }}
-                        onClick={() => setShouldValidate(true)}
-                    >
-                        GET STARTED
-                    </NfRedButton>
-                </form>
+                )}
             </Container>
         </div>
     );

@@ -1,47 +1,25 @@
-import axios from "axios";
+import { post } from "./utilities";
 
-const baseUrl = "http://localhost:5000";
+const baseUrl = "http://3.140.185.156:5000";
 
-export const login = async (params) => {
-    const response = await request(axios.post, baseUrl + "/login", params);
+export const getUserDetails = async () => {
+    const response = await post(baseUrl);
+    return response;
+};
+
+export const signin = async (params) => {
+    const response = await post(baseUrl + "/login", params);
+    sessionStorage.setItem("isSignedIn", true);
     return response;
 };
 
 export const signup = async (params) => {
-    console.log(params);
-    const response = await request(axios.post, baseUrl + "/signup", params);
+    const response = await post(baseUrl + "/signup", params);
+    sessionStorage.setItem("isSignedIn", true);
     return response;
 };
 
-export const logout = async () => {
-    await request(axios.post, baseUrl + "/logout");
+export const signout = async () => {
     sessionStorage.clear();
-};
-
-const request = async (method, url, params) => {
-    try {
-        var response;
-        if (params) {
-            response = await method(url, params, { withCredentials: true });
-        } else {
-            response = await method(url, { withCredentials: true });
-        }
-
-        return {
-            status: response.status,
-            data: response.data,
-        };
-    } catch (error) {
-        if (error.response) {
-            return {
-                status: error.response.status,
-                data: error.response.data,
-            };
-        } else {
-            return {
-                status: 503,
-                data: null,
-            };
-        }
-    }
+    await post(baseUrl + "/logout");
 };

@@ -14,3 +14,10 @@ class User(db.Model):
         self.surname = surname
         self.email = email
         self.password = bcrypt.hashpw(password.encode(), bcrypt.gensalt())
+
+    def as_dict(self):
+        return {
+            "name": self.name,
+            "surname": self.surname,
+            "email": self.email
+        }
