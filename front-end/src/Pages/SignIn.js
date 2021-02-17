@@ -9,13 +9,15 @@ import {
     FormControlLabel,
     SvgIcon,
 } from "@material-ui/core";
-import { CheckBox } from "@material-ui/icons";
+import { CheckBox as CheckBoxIcon } from "@material-ui/icons";
 import React, { useState } from "react";
 import logo from "../assets/logo.svg";
 import NfRedButton from "../components/NfRedButton";
 import NfValidatedTextField from "../components/NfValidatedTextField";
 import backgroundImg from "../assets/background.jpg";
 import { Link } from "react-router-dom";
+import { login } from "../service/Service";
+import { validateEmail, validatePassword } from "../validators";
 
 const useStyles = makeStyles({
     paper: {
@@ -97,8 +99,27 @@ const WhiteTypography = withStyles({
 
 export default function SignIn() {
     const [shouldValidate, setShouldValidate] = useState(false);
-    const submit = () => {
+    const submit = (e) => {
         setShouldValidate(true);
+        const email = e.target.email.value;
+        const password = e.target.password.value;
+        const remember = e.target.remember.checked;
+        const isEmailValid = validateEmail(email);
+        const isPasswordValid = validatePassword(password);
+        if (isEmailValid !== true || isPasswordValid !== true) {
+            return;
+        }
+
+        console.log(email);
+        console.log(password);
+        console.log(remember);
+        login({
+            email,
+            password,
+        }).then((response) => {
+            console.log(response);
+            window.location.href = "/";
+        });
     };
 
     const classes = useStyles();
@@ -115,10 +136,13 @@ export default function SignIn() {
             <Container maxWidth="xs" className={classes.centerForm}>
                 <form>
                     <WhiteTypography paragraph variant="h4">
-                        <Box fontWeight="Bold">Sign In</Box>
+                        <Box fontWeight="Bold" component="span">
+                            Sign In
+                        </Box>
                     </WhiteTypography>
                     <NfValidatedTextField
                         type="email"
+                        name="email"
                         fullWidth
                         label="Email"
                         required
@@ -127,6 +151,7 @@ export default function SignIn() {
                     />
                     <NfValidatedTextField
                         type="password"
+                        name="password"
                         fullWidth
                         label="Password"
                         required
@@ -136,7 +161,7 @@ export default function SignIn() {
                     <NfRedButton
                         fullWidth
                         style={{ marginTop: "24px", minHeight: "48px" }}
-                        onClick={{ submit }}
+                        onClick={submit}
                     >
                         Sign In
                     </NfRedButton>
@@ -149,13 +174,14 @@ export default function SignIn() {
                                     className={classes.checkbox}
                                     icon={
                                         <SvgIcon fontSize="inherit">
-                                            <path d="M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.11 0 2-.9 2-2V5c0-1.1-.89-2-2-2zm-9" />
+                                            <path d="M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.11 0 2-.9 2-2V5c0-1.1-.89-2-2-2zm-9 14l-5-5" />
                                         </SvgIcon>
                                     }
                                     checkedIcon={
-                                        <CheckBox fontSize="inherit" />
+                                        <CheckBoxIcon fontSize="inherit" />
                                     }
-                                    color="inherit"
+                                    color="default"
+                                    name="remember"
                                 />
                             }
                             className={classes.remember}
@@ -170,10 +196,8 @@ export default function SignIn() {
                 <br />
                 <div style={{ color: "#737373" }}>
                     New to Netflix?&nbsp;
-                    <Link to="/">
-                        <a href="#" className={classes.link}>
-                            Sign up now
-                        </a>
+                    <Link to="/" className={classes.link}>
+                        Sign up now
                     </Link>
                 </div>
             </Container>

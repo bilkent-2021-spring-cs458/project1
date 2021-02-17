@@ -12,6 +12,7 @@ import NfRedButton from "../../components/NfRedButton";
 import NfValidatedTextField from "../../components/NfValidatedTextField";
 import { validateEmail, validatePassword } from "../../validators";
 import { useHistory } from "react-router-dom";
+import { signup } from "../../service/Service";
 
 const useStyles = makeStyles({
     checkbox: {
@@ -38,7 +39,16 @@ export default function RegForm({ classes }) {
         console.log(email);
         console.log(password);
         console.log(emailPreference);
-        history.push("/signup");
+        signup({
+            email,
+            password,
+            emailPreference,
+            name: "todo",
+            surname: "todo",
+        }).then((response) => {
+            console.log(response);
+            history.push("/signup");
+        });
     };
 
     // TODO If already registered, show different content

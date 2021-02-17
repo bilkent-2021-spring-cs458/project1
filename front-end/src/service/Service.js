@@ -1,23 +1,15 @@
 import axios from "axios";
-import qs from "querystring";
 
-const baseUrl = "http://localhost:8080";
+const baseUrl = "http://localhost:5000";
 
 export const login = async (params) => {
-    const response = await request(
-        axios.post,
-        baseUrl + "/login",
-        qs.stringify(params)
-    );
+    const response = await request(axios.post, baseUrl + "/login", params);
     return response;
 };
 
 export const signup = async (params) => {
-    const response = await request(
-        axios.post,
-        baseUrl + "/signup",
-        qs.stringify(params)
-    );
+    console.log(params);
+    const response = await request(axios.post, baseUrl + "/signup", params);
     return response;
 };
 
@@ -43,7 +35,7 @@ const request = async (method, url, params) => {
         if (error.response) {
             return {
                 status: error.response.status,
-                data: null,
+                data: error.response.data,
             };
         } else {
             return {

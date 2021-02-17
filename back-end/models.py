@@ -1,0 +1,16 @@
+import bcrypt
+
+from app import db
+
+
+class User(db.Model):
+    email = db.Column(db.String(60), primary_key=True)
+    password = db.Column(db.String(64))
+    name = db.Column(db.String(50))
+    surname = db.Column(db.String(50))
+
+    def __init__(self, name, surname, email, password):
+        self.name = name
+        self.surname = surname
+        self.email = email
+        self.password = bcrypt.hashpw(password.encode(), bcrypt.gensalt())
