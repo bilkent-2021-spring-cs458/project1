@@ -7,16 +7,16 @@ import {
 } from "@material-ui/core";
 import { CheckBoxOutlineBlank, CheckBoxOutlined } from "@material-ui/icons";
 import React, { useState } from "react";
-import PropTypes from "prop-types";
-import NfRedButton from "../../components/NfRedButton";
-import NfValidatedTextField from "../../components/NfValidatedTextField";
-import { validateEmail, validatePassword } from "../../validators";
 import { useHistory } from "react-router-dom";
-import { signup } from "../../service/Service";
+import PropTypes from "prop-types";
+import NfRedButton from "~/components/NfRedButton";
+import NfValidatedTextField from "~/components/NfValidatedTextField";
+import { validateEmail, validatePassword } from "~/validators";
+import { signup } from "~/service/Service";
 import {
     getLocalStorage,
     setLocalStorage,
-} from "../../service/LocalStorageWithExpiry";
+} from "~/service/LocalStorageWithExpiry";
 
 const useStyles = makeStyles({
     checkbox: {
@@ -55,9 +55,7 @@ export default function RegForm({ classes }) {
         signup({
             email,
             password,
-            emailPreference,
-            name: "todo",
-            surname: "todo",
+            receive_offers: emailPreference,
         })
             .then(() => {
                 history.push("/signup");

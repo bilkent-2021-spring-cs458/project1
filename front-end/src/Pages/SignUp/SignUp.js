@@ -9,14 +9,14 @@ import {
 import React, { useEffect, useRef, useState } from "react";
 import { Route, withRouter } from "react-router-dom";
 import { CSSTransition } from "react-transition-group";
-import logo from "../../assets/logo.svg";
+import logo from "~/assets/logo.svg";
 import PlanForm from "./PlanForm";
 import RegForm from "./RegForm";
 import Registration from "./Registration";
 import Step2 from "./Step2";
-import "../../stylesheet/SignUp.css";
-import { signout } from "../../service/Service";
-import { getLocalStorage } from "../../service/LocalStorageWithExpiry";
+import "~/stylesheet/SignUp.css";
+import { signout } from "~/service/Service";
+import { getLocalStorage } from "~/service/LocalStorageWithExpiry";
 
 const useStyles = makeStyles({
     header: {

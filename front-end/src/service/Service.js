@@ -35,6 +35,7 @@ export const signup = async (params) => {
 export const signout = async () => {
     await request(axios.post, baseUrl + "/logout");
     localStorage.clear();
+    sessionStorage.clear();
 };
 
 export const setPaymentPlan = async (params) => {

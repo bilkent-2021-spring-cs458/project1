@@ -7,12 +7,12 @@ import {
     makeStyles,
     Typography,
 } from "@material-ui/core";
-import React from "react";
-import PropTypes from "prop-types";
-import NfRedButton from "../../components/NfRedButton";
-import checkmarkImg from "../../assets/Checkmark.png";
 import { Check } from "@material-ui/icons";
+import React from "react";
 import { useHistory } from "react-router-dom";
+import PropTypes from "prop-types";
+import NfRedButton from "~/components/NfRedButton";
+import checkmarkImg from "~/assets/Checkmark.png";
 
 const useStyles = makeStyles({
     checkmarkLogo: {

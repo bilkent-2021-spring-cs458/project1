@@ -1,10 +1,10 @@
 import React, { useState } from "react";
+import { useHistory } from "react-router-dom";
 import { Box, makeStyles, Typography, withStyles } from "@material-ui/core";
 import { ChevronRight } from "@material-ui/icons";
-import NfRedButton from "../components/NfRedButton";
-import NfValidatedTextField from "../components/NfValidatedTextField";
-import { useHistory } from "react-router-dom";
-import { validateEmail } from "../validators";
+import NfRedButton from "~/components/NfRedButton";
+import NfValidatedTextField from "~/components/NfValidatedTextField";
+import { validateEmail } from "~/validators";
 
 const useStyles = makeStyles({
     textField: {

@@ -9,10 +9,10 @@ import {
     Typography,
 } from "@material-ui/core";
 import React, { useState } from "react";
-import PropTypes from "prop-types";
-import NfRedButton from "../../components/NfRedButton";
 import { Check } from "@material-ui/icons";
-import { setPaymentPlan } from "../../service/Service";
+import PropTypes from "prop-types";
+import NfRedButton from "~/components/NfRedButton";
+import { setPaymentPlan } from "~/service/Service";
 
 const useStyles = makeStyles({
     table: {

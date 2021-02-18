@@ -11,14 +11,14 @@ import {
 } from "@material-ui/core";
 import { CheckBox as CheckBoxIcon } from "@material-ui/icons";
 import React, { useState } from "react";
-import logo from "../assets/logo.svg";
-import NfRedButton from "../components/NfRedButton";
-import NfValidatedTextField from "../components/NfValidatedTextField";
-import backgroundImg from "../assets/background.jpg";
 import { Link } from "react-router-dom";
-import { signin } from "../service/Service";
-import { validateEmail, validatePassword } from "../validators";
-import { getLocalStorage } from "../service/LocalStorageWithExpiry";
+import logo from "~/assets/logo.svg";
+import NfRedButton from "~/components/NfRedButton";
+import NfValidatedTextField from "~/components/NfValidatedTextField";
+import backgroundImg from "~/assets/background.jpg";
+import { signin } from "~/service/Service";
+import { validateEmail, validatePassword } from "~/validators";
+import { getLocalStorage } from "~/service/LocalStorageWithExpiry";
 
 const useStyles = makeStyles({
     paper: {
@@ -128,24 +128,24 @@ export default function SignIn() {
         signin({ email, password, remember })
             .then(() => (window.location.href = "/"))
             .catch((response) => {
+                sessionStorage.setItem("email", email);
                 setError(
                     <div className={classes.uiMessage}>
-                        {response.data.error === "NO_ACCOUNT_WITH_EMAIL" && (
-                            <>
-                                Sorry, we can&apos;t find an account with this
-                                email address. Please try again or&nbsp;
-                                <Link to="/" style={{ color: "inherit" }}>
-                                    create a new account
-                                </Link>
-                                .
-                            </>
-                        )}
-                        {response.data.error === "INCORRECT_PASSWORD" && (
+                        {response.data.error === "INCORRECT_PASSWORD" ? (
                             <>
                                 Incorrect password. Please try again or you
                                 can&nbsp;
                                 <Link to="#" style={{ color: "inherit" }}>
                                     reset your password
+                                </Link>
+                                .
+                            </>
+                        ) : (
+                            <>
+                                Sorry, we can&apos;t find an account with this
+                                email address. Please try again or&nbsp;
+                                <Link to="/" style={{ color: "inherit" }}>
+                                    create a new account
                                 </Link>
                                 .
                             </>
@@ -190,6 +190,7 @@ export default function SignIn() {
                             required
                             className={classes.textField}
                             shouldValidate={shouldValidate}
+                            initialValue={sessionStorage.getItem("email")}
                         />
                         <NfValidatedTextField
                             type="password"

@@ -1,9 +1,9 @@
 import { Container, makeStyles, Typography } from "@material-ui/core";
 import React from "react";
-import PropTypes from "prop-types";
-import NfRedButton from "../../components/NfRedButton";
-import devicesImg from "../../assets/Devices.png";
 import { useHistory } from "react-router-dom";
+import PropTypes from "prop-types";
+import NfRedButton from "~/components/NfRedButton";
+import devicesImg from "~/assets/Devices.png";
 
 const useStyles = makeStyles({
     devicesLogo: {

@@ -1,14 +1,13 @@
 import { AppBar, Box, Container, makeStyles, Toolbar } from "@material-ui/core";
 import React from "react";
-
-import logo from "../assets/logo.svg";
-import backgroundImg from "../assets/background.jpg";
-import NfRedButton from "../components/NfRedButton";
 import { useHistory } from "react-router-dom";
-import { signout } from "../service/Service";
+import logo from "~/assets/logo.svg";
+import backgroundImg from "~/assets/background.jpg";
+import NfRedButton from "~/components/NfRedButton";
+import { signout } from "~/service/Service";
+import { getLocalStorage } from "~/service/LocalStorageWithExpiry";
 import LandingSignUpForm from "./LandingSignUpForm";
 import LandingUserDetails from "./LandingUserDetails";
-import { getLocalStorage } from "../service/LocalStorageWithExpiry";
 
 const useStyles = makeStyles({
     paper: {
