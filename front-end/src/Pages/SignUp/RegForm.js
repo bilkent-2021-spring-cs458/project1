@@ -13,6 +13,10 @@ import NfValidatedTextField from "../../components/NfValidatedTextField";
 import { validateEmail, validatePassword } from "../../validators";
 import { useHistory } from "react-router-dom";
 import { signup } from "../../service/Service";
+import {
+    getLocalStorage,
+    setLocalStorage,
+} from "../../service/LocalStorageWithExpiry";
 
 const useStyles = makeStyles({
     checkbox: {
@@ -20,13 +24,24 @@ const useStyles = makeStyles({
             backgroundColor: "transparent !important",
         },
     },
+    email: {
+        margin: "50px",
+        textAlign: "center",
+        fontSize: "19px",
+        fontWeight: "700",
+    },
 });
 
 export default function RegForm({ classes }) {
     const history = useHistory();
-    const [shouldValidate, setShouldValidate] = useState(false);
     const submit = (e) => {
         e.preventDefault();
+
+        if (isSignedIn) {
+            history.push("/signup");
+            return;
+        }
+
         const email = e.target.email.value;
         const password = e.target.password.value;
         const emailPreference = e.target.emailPreference.checked;
@@ -36,75 +51,94 @@ export default function RegForm({ classes }) {
             return;
         }
 
-        console.log(email);
-        console.log(password);
-        console.log(emailPreference);
+        setLocalStorage("email", email);
         signup({
             email,
             password,
             emailPreference,
             name: "todo",
             surname: "todo",
-        }).then((response) => {
-            console.log(response);
-            history.push("/signup");
-        });
+        })
+            .then(() => {
+                history.push("/signup");
+            })
+            .catch(() => {
+                alert("Some error occured");
+            });
     };
 
-    // TODO If already registered, show different content
+    const isSignedIn = getLocalStorage("isSignedIn");
+    const [shouldValidate, setShouldValidate] = useState(false);
     const myClasses = useStyles();
     return (
-        <form onSubmit={submit}>
-            <Container maxWidth="xs">
-                <span className={classes.stepIndicator}>
-                    STEP <b>1</b> OF <b>3</b>
-                </span>
-                <Typography variant="h1" className={classes.stepTitle}>
-                    Create a password to start your membership.
-                </Typography>
-                <div className={classes.contextRow}>
-                    Just a few more steps and you&apos;re done!
-                    <br />
-                    We hate paperwork, too.
-                </div>
+        <Container maxWidth="xs">
+            <form onSubmit={submit}>
+                {isSignedIn ? (
+                    <>
+                        <Typography variant="h1" className={classes.stepTitle}>
+                            Account Created
+                        </Typography>
+                        <div className={classes.contextRow}>
+                            Use this email to access your account:
+                        </div>
+                        <Typography variant="h1" className={myClasses.email}>
+                            {getLocalStorage("email")}
+                        </Typography>
+                    </>
+                ) : (
+                    <>
+                        <span className={classes.stepIndicator}>
+                            STEP <b>1</b> OF <b>3</b>
+                        </span>
+                        <Typography variant="h1" className={classes.stepTitle}>
+                            Create a password to start your membership.
+                        </Typography>
+                        <div className={classes.contextRow}>
+                            Just a few more steps and you&apos;re done!
+                            <br />
+                            We hate paperwork, too.
+                        </div>
 
-                <NfValidatedTextField
-                    type="email"
-                    name="email"
-                    fullWidth
-                    label="Email"
-                    required
-                    className={classes.textField}
-                    shouldValidate={shouldValidate}
-                    initialValue={sessionStorage.getItem("email")}
-                />
-                <NfValidatedTextField
-                    type="password"
-                    name="password"
-                    fullWidth
-                    label="Add a password"
-                    required
-                    className={classes.textField}
-                    shouldValidate={shouldValidate}
-                />
-                <FormControlLabel
-                    control={
-                        <Checkbox
-                            disableRipple
-                            icon={<CheckBoxOutlineBlank fontSize="large" />}
-                            checkedIcon={
-                                <CheckBoxOutlined
-                                    fontSize="large"
-                                    style={{ color: "#0071eb" }}
+                        <NfValidatedTextField
+                            type="email"
+                            name="email"
+                            fullWidth
+                            label="Email"
+                            required
+                            className={classes.textField}
+                            shouldValidate={shouldValidate}
+                            initialValue={sessionStorage.getItem("email")}
+                        />
+                        <NfValidatedTextField
+                            type="password"
+                            name="password"
+                            fullWidth
+                            label="Add a password"
+                            required
+                            className={classes.textField}
+                            shouldValidate={shouldValidate}
+                        />
+                        <FormControlLabel
+                            control={
+                                <Checkbox
+                                    disableRipple
+                                    icon={
+                                        <CheckBoxOutlineBlank fontSize="large" />
+                                    }
+                                    checkedIcon={
+                                        <CheckBoxOutlined
+                                            fontSize="large"
+                                            style={{ color: "#0071eb" }}
+                                        />
+                                    }
+                                    className={myClasses.checkbox}
+                                    name="emailPreference"
                                 />
                             }
-                            className={myClasses.checkbox}
-                            name="emailPreference"
+                            label="Please do not email me Netflix special offers."
                         />
-                    }
-                    label="Please do not email me Netflix special offers."
-                />
-
+                    </>
+                )}
                 <NfRedButton
                     type="submit"
                     fullWidth
@@ -113,8 +147,8 @@ export default function RegForm({ classes }) {
                 >
                     Continue
                 </NfRedButton>
-            </Container>
-        </form>
+            </form>
+        </Container>
     );
 }
 

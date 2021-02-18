@@ -6,8 +6,8 @@ import {
     makeStyles,
     Toolbar,
 } from "@material-ui/core";
-import React, { useRef } from "react";
-import { BrowserRouter as Router, Route } from "react-router-dom";
+import React, { useEffect, useRef, useState } from "react";
+import { Route, withRouter } from "react-router-dom";
 import { CSSTransition } from "react-transition-group";
 import logo from "../../assets/logo.svg";
 import PlanForm from "./PlanForm";
@@ -15,6 +15,8 @@ import RegForm from "./RegForm";
 import Registration from "./Registration";
 import Step2 from "./Step2";
 import "../../stylesheet/SignUp.css";
+import { signout } from "../../service/Service";
+import { getLocalStorage } from "../../service/LocalStorageWithExpiry";
 
 const useStyles = makeStyles({
     header: {
@@ -69,7 +71,7 @@ const useStyles = makeStyles({
     },
 });
 
-export default function SignUp() {
+export default withRouter(function SignUp(props) {
     const routes = [
         {
             path: "/signup/registration",
@@ -92,48 +94,67 @@ export default function SignUp() {
             ref: useRef(null),
         },
     ];
+
+    const [isSignedIn, setSignedIn] = useState(getLocalStorage("isSignedIn"));
+    useEffect(() => {
+        setSignedIn(getLocalStorage("isSignedIn"));
+    }, [props.location]);
+
     const classes = useStyles();
     return (
         <>
-            <Router>
-                <AppBar position="static" className={classes.header}>
-                    <Toolbar style={{ padding: 0 }}>
-                        <Box className={classes.logoBox}>
-                            <Link href="/" className={classes.headerLink}>
-                                <img
-                                    align="center"
-                                    height="45"
-                                    src={logo}
-                                    alt="logo"
-                                />
-                            </Link>
-                        </Box>
+            <AppBar position="static" className={classes.header}>
+                <Toolbar style={{ padding: 0 }}>
+                    <Box className={classes.logoBox}>
+                        <Link href="/" className={classes.headerLink}>
+                            <img
+                                align="center"
+                                height="45"
+                                src={logo}
+                                alt="logo"
+                            />
+                        </Link>
+                    </Box>
+
+                    {isSignedIn ? (
+                        <Link
+                            href="#"
+                            className={classes.headerLink}
+                            onClick={() => {
+                                signout().then(
+                                    () => (window.location.href = "/")
+                                );
+                            }}
+                        >
+                            Sign Out
+                        </Link>
+                    ) : (
                         <Link href="/signin" className={classes.headerLink}>
                             Sign In
                         </Link>
-                    </Toolbar>
-                </AppBar>
+                    )}
+                </Toolbar>
+            </AppBar>
 
-                <Container style={{ paddingTop: 20 }}>
-                    {routes.map(({ path, Component, ref }) => (
-                        <Route key={path} exact path={path}>
-                            {({ match }) => (
-                                <CSSTransition
-                                    nodeRef={ref}
-                                    in={match != null}
-                                    timeout={500}
-                                    classNames="transition"
-                                    unmountOnExit
-                                >
-                                    <div className="transition" ref={ref}>
-                                        <Component classes={classes} />
-                                    </div>
-                                </CSSTransition>
-                            )}
-                        </Route>
-                    ))}
-                </Container>
-            </Router>
+            <Container style={{ paddingTop: 20 }}>
+                {routes.map(({ path, Component, ref }) => (
+                    <Route key={path} exact path={path}>
+                        {({ match }) => (
+                            <CSSTransition
+                                nodeRef={ref}
+                                in={match != null}
+                                timeout={500}
+                                classNames="transition"
+                                unmountOnExit
+                            >
+                                <div className="transition" ref={ref}>
+                                    <Component classes={classes} />
+                                </div>
+                            </CSSTransition>
+                        )}
+                    </Route>
+                ))}
+            </Container>
         </>
     );
-}
+});

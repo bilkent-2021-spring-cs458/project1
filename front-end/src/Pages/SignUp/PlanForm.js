@@ -12,6 +12,7 @@ import React, { useState } from "react";
 import PropTypes from "prop-types";
 import NfRedButton from "../../components/NfRedButton";
 import { Check } from "@material-ui/icons";
+import { setPaymentPlan } from "../../service/Service";
 
 const useStyles = makeStyles({
     table: {
@@ -72,8 +73,11 @@ export default function PlanForm({ classes }) {
     const [plan, setPlan] = useState(1);
     const submit = (e) => {
         e.preventDefault();
-        console.log("Plan: " + plan);
-        window.location.href = "/";
+        setPaymentPlan({ plan })
+            .then(() => {
+                window.location.href = "/";
+            })
+            .catch(() => alert("Something went wrong!"));
     };
 
     const handleTableClick = (event) => {

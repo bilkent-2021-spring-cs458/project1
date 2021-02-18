@@ -1,5 +1,4 @@
 import bcrypt
-
 from app import db
 
 
@@ -8,6 +7,7 @@ class User(db.Model):
     password = db.Column(db.String(64))
     name = db.Column(db.String(50))
     surname = db.Column(db.String(50))
+    plan = db.Column(db.Integer)
 
     def __init__(self, name, surname, email, password):
         self.name = name
@@ -19,5 +19,6 @@ class User(db.Model):
         return {
             "name": self.name,
             "surname": self.surname,
-            "email": self.email
+            "email": self.email,
+            "plan": self.plan
         }

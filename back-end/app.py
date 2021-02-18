@@ -1,13 +1,9 @@
 from flask import Flask, request, session
-from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 import re
 
 app = Flask(__name__)
 app.secret_key = b'Ziya the legend'
-
-app.config['CORS_SUPPORTS_CREDENTIALS'] = True
-cors = CORS(app, supports_credentials=True)
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://cs458:cs458@localhost:3306/cs458'
 db = SQLAlchemy(app)
@@ -16,15 +12,15 @@ from models import *  # noqa: E402
 db.create_all()
 
 
-@app.route('/', methods=['POST'])
+@app.route('/api', methods=['POST'])
 def index():
-    if 'email' in session:
-        user = User.query.filter_by(email=session['email']).first()
-        return user.as_dict()
-    return {"error": "Not signed in"}, 401
+    if 'email' not in session:
+        return {"error": "Not signed in"}, 401
+    user = User.query.filter_by(email=session['email']).first()
+    return user.as_dict()
 
 
-@app.route('/signup', methods=["POST"])
+@app.route('/api/signup', methods=["POST"])
 def signup():
     request_data = request.get_json()
     try:
@@ -48,10 +44,28 @@ def signup():
     db.session.commit()
 
     session['email'] = email
-    return "{}", 200
+    return {}, 200
 
 
-@app.route('/login', methods=["POST"])
+@app.route('/api/set_plan', methods=["POST"])
+def set_plan():
+    if 'email' not in session:
+        return {"error": "Not signed in"}, 401
+
+    request_data = request.get_json()
+    try:
+        plan = request_data['plan']
+    except (KeyError, TypeError):
+        return {"error": "Some data missing"}, 400
+
+    user = User.query.filter_by(email=session['email']).first()
+    user.plan = plan
+    db.session.commit()
+
+    return {}, 200
+
+
+@app.route('/api/login', methods=["POST"])
 def login():
     request_data = request.get_json()
     try:
@@ -62,21 +76,21 @@ def login():
 
     user = User.query.filter_by(email=email).first()
     if user is None:
-        return {"error": "No such user"}, 400
+        return {"error": "NO_ACCOUNT_WITH_EMAIL"}, 400
 
     if bcrypt.hashpw(password, user.password.encode()) == user.password.encode():
         session['email'] = email
-        return '{}', 200
+        return {}, 200
     else:
-        return {"error": "No such user"}, 400
+        return {"error": "INCORRECT_PASSWORD"}, 400
 
 
-@app.route('/logout', methods=["POST"])
+@app.route('/api/logout', methods=["POST"])
 def logout():
-    if session.get("email") is None:
+    if 'email' not in session:
         return {"error": "Not signed in"}, 401
     session.clear()
-    return '{}'
+    return {}
 
 
 if __name__ == "__main__":

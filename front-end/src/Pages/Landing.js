@@ -1,22 +1,14 @@
-import {
-    AppBar,
-    Box,
-    Container,
-    makeStyles,
-    withStyles,
-    Toolbar,
-    Typography,
-} from "@material-ui/core";
-import { ChevronRight } from "@material-ui/icons";
-import React, { useEffect, useState } from "react";
+import { AppBar, Box, Container, makeStyles, Toolbar } from "@material-ui/core";
+import React from "react";
 
 import logo from "../assets/logo.svg";
 import backgroundImg from "../assets/background.jpg";
 import NfRedButton from "../components/NfRedButton";
-import NfValidatedTextField from "../components/NfValidatedTextField";
 import { useHistory } from "react-router-dom";
-import { validateEmail } from "../validators";
-import { getUserDetails, signout } from "../service/Service";
+import { signout } from "../service/Service";
+import LandingSignUpForm from "./LandingSignUpForm";
+import LandingUserDetails from "./LandingUserDetails";
+import { getLocalStorage } from "../service/LocalStorageWithExpiry";
 
 const useStyles = makeStyles({
     paper: {
@@ -47,38 +39,10 @@ const useStyles = makeStyles({
     },
 });
 
-const WhiteTypography = withStyles({
-    root: {
-        color: "white",
-    },
-})(Typography);
-
 export default function Landing() {
     const history = useHistory();
-    const [shouldValidate, setShouldValidate] = useState(false);
-    const submit = (e) => {
-        e.preventDefault();
-        const email = e.target.email.value;
-        const isValid = validateEmail(email);
-        if (isValid !== true) {
-            return;
-        }
-
-        sessionStorage.setItem("email", email);
-        history.push("/signup/registration");
-    };
-
-    const [userDetails, setUserDetails] = useState({});
-    useEffect(() => {
-        if (sessionStorage.getItem("isSignedIn")) {
-            getUserDetails().then((response) => {
-                setUserDetails(response);
-                console.log(response);
-            });
-        }
-    }, []);
-
     const classes = useStyles();
+    const isSignedIn = getLocalStorage("isSignedIn");
     return (
         <div className={classes.paper}>
             <AppBar position="static" className={classes.header}>
@@ -86,12 +50,7 @@ export default function Landing() {
                     <Box className={classes.logoBox}>
                         <img height="36" src={logo} alt="logo" />
                     </Box>
-                    {!sessionStorage.getItem("isSignedIn") && (
-                        <NfRedButton onClick={() => history.push("/signin")}>
-                            Sign In
-                        </NfRedButton>
-                    )}
-                    {sessionStorage.getItem("isSignedIn") && (
+                    {isSignedIn ? (
                         <NfRedButton
                             onClick={() => {
                                 signout().then(
@@ -101,72 +60,16 @@ export default function Landing() {
                         >
                             Sign out
                         </NfRedButton>
+                    ) : (
+                        <NfRedButton onClick={() => history.push("/signin")}>
+                            Sign In
+                        </NfRedButton>
                     )}
                 </Toolbar>
             </AppBar>
 
             <Container maxWidth="sm" className={classes.centerForm}>
-                {!sessionStorage.getItem("isSignedIn") && (
-                    <form align="center" onSubmit={submit}>
-                        <WhiteTypography paragraph variant="h3" align="center">
-                            <Box fontWeight="Bold" component="span">
-                                Unlimited movies, TV shows, and more.
-                            </Box>
-                        </WhiteTypography>
-                        <WhiteTypography paragraph variant="h5" align="center">
-                            Watch anywhere. Cancel anytime.
-                        </WhiteTypography>
-                        <WhiteTypography
-                            gutterBottom
-                            variant="h5"
-                            align="center"
-                        >
-                            Ready to watch? Enter your email to create or
-                            restart your membership.
-                        </WhiteTypography>
-                        <NfValidatedTextField
-                            type="email"
-                            name="email"
-                            fullWidth
-                            label="Email address"
-                            required
-                            className={classes.textField}
-                            shouldValidate={shouldValidate}
-                            initialValue={sessionStorage.getItem("email")}
-                        />
-                        <br />
-                        <NfRedButton
-                            type="submit"
-                            endIcon={<ChevronRight />}
-                            style={{ minHeight: "40px" }}
-                            onClick={() => setShouldValidate(true)}
-                        >
-                            GET STARTED
-                        </NfRedButton>
-                    </form>
-                )}
-                {sessionStorage.getItem("isSignedIn") && (
-                    <WhiteTypography paragraph variant="h4">
-                        <Box fontWeight="Bold" component="span">
-                            You are currently signed in.
-                            <br />
-                            Your user details:
-                            <br />
-                            <br />
-                            Email:&nbsp;
-                            {userDetails ? userDetails.email : ""}
-                            <br />
-                            Name:&nbsp;
-                            {userDetails ? userDetails.name : ""}
-                            <br />
-                            Surname:&nbsp;
-                            {userDetails ? userDetails.surname : ""}
-                            <br />
-                            Payment Plan:&nbsp;
-                            {userDetails ? userDetails.plan : ""}
-                        </Box>
-                    </WhiteTypography>
-                )}
+                {isSignedIn ? <LandingUserDetails /> : <LandingSignUpForm />}
             </Container>
         </div>
     );
