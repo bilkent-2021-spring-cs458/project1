@@ -1,0 +1,33 @@
+Case 1:
+
+Sign-in page -> Empty mail, empty password
+Sign-in page -> Invalid mail, valid password
+Sign-in page -> Valid mail, invalid password
+Sign-in page -> Invalid mail, Invalid password
+Sign-in page -> Valid mail, valid password
+
+Case 2:
+After logging in, pressing back and forward should not allow you to reach the home page
+
+Case 3:
+
+Check for being able to paste the password value into the password field while sign in
+
+(Copy paste from pass fields should be disabled)
+
+Case 4:
+SQL injection attack
+
+sql@t.t
+" or ""="
+
+sql2@t.t
+xxx') OR 1 = 1 -- ]
+
+Case 5:
+Check if the remember me button works
+
+Log in with valid credetentials
+sign out
+check if any of the fields are already filled in
+
