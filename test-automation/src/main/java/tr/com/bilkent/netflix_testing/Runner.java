@@ -3,6 +3,9 @@ package tr.com.bilkent.netflix_testing;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 
+/**
+ * Runs all the test sets and displays their results.
+ */
 public class Runner {
 	public static void main(String[] args) {
 		WebDriver driver = new ChromeDriver();
