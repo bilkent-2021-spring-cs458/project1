@@ -10,8 +10,6 @@
 	<version>0.0.1-SNAPSHOT</version>
 
 	<name>Netflix_Testing</name>
-	<!-- FIXME change it to the project's website -->
-	<url>http://www.example.com</url>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -21,19 +19,15 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.11</version>
-			<scope>test</scope>
-		</dependency>
-
-		<dependency>
 			<groupId>org.seleniumhq.selenium</groupId>
 			<artifactId>selenium-java</artifactId>
 			<version>3.141.59</version>
 		</dependency>
+
+		<dependency>
+			<groupId>org.json</groupId>
+			<artifactId>json</artifactId>
+			<version>20201115</version>
+		</dependency>
 	</dependencies>
-
-
-
 </project>

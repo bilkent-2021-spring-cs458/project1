@@ -1,31 +1,26 @@
 package tr.com.bilkent.netflix_testing;
 
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.WebDriverWait;
-
-import java.time.Duration;
-import java.util.concurrent.TimeUnit;
+import org.openqa.selenium.html5.WebStorage;
 
 public final class Utils {
+	public static final String BASE_URL = "http://3.140.185.156";
+	public static final String SIGNIN_URL = BASE_URL + "/signin";
 
-    private Utils() {}
+	public static final String VALID_EMAIL = "test@test.test";
+	public static final String VALID_PASSWORD = "test";
 
-    public static HomePage testLogin(WebDriver driver, String username, String pass)
-    {
-        SignInPage signInPage = new SignInPage(driver);
-        signInPage.clearInput();
-        /*WebElement text = new WebDriverWait(driver, Duration.ofSeconds(3)).until(driver1 ->
-                driver.findElement(homePage.getMessageBy()));
-        if (text.getText().contains("You are currently signed in.")) {
-            System.out.println(homePage.getMessageText());
-            return homePage;
-        }
-        else
-            return null;
+	private Utils() {
+	}
 
-         */
-        return signInPage.loginUser(username, pass);
-    }
-
+	public static void resetWebDriver(WebDriver driver) {
+		driver.manage().deleteAllCookies();
+		try {
+			WebStorage webStorage = (WebStorage) driver;
+			webStorage.getSessionStorage().clear();
+			webStorage.getLocalStorage().clear();
+		} catch (Exception e) {
+			// Probably it is the first test case, so no need
+		}
+	}
 }
