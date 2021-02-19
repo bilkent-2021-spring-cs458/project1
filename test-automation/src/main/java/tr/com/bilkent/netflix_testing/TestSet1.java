@@ -8,14 +8,14 @@ import org.openqa.selenium.WebDriver;
 import lombok.Getter;
 import tr.com.bilkent.netflix_testing.page_object.SignInPage;
 
-public class TestSetOne {
+public class TestSet1 implements TestSet {
 	private final JSONArray data;
 	private final WebDriver driver;
 
 	@Getter
 	private TestSetResult result;
 
-	public TestSetOne(WebDriver driver) {
+	public TestSet1(WebDriver driver) {
 		JSONTokener tokener = new JSONTokener(getClass().getResourceAsStream("TestCaseOneData.json"));
 		data = new JSONArray(tokener);
 		this.driver = driver;

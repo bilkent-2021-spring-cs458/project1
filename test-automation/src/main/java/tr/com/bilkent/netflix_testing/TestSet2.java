@@ -5,12 +5,12 @@ import org.openqa.selenium.WebDriver;
 import lombok.Getter;
 import tr.com.bilkent.netflix_testing.page_object.LandingPage;
 
-public class TestSetTwo {
+public class TestSet2 implements TestSet {
 	private final WebDriver driver;
 	@Getter
 	private TestSetResult result;
 
-	public TestSetTwo(WebDriver driver) {
+	public TestSet2(WebDriver driver) {
 		this.driver = driver;
 		result = new TestSetResult(0, 2);
 	}

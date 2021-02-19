@@ -1,5 +1,8 @@
 import axios from "axios";
-import { setLocalStorage } from "./LocalStorageWithExpiry";
+import {
+    clearLocalStorageWithTTL,
+    setLocalStorage,
+} from "./LocalStorageWithExpiry";
 
 const baseUrl = "/api";
 
@@ -24,13 +27,14 @@ export const checkEmail = async (email) => {
 };
 
 export const signin = async (params) => {
+    console.log(params);
     const response = await request(axios.post, baseUrl + "/login", params);
     if (response.status !== 200) {
         throw response;
     }
 
+    setLocalStorage("email", params.email, params.remember);
     setLocalStorage("isSignedIn", true);
-    setLocalStorage("email", params.email);
     return response;
 };
 
@@ -47,7 +51,7 @@ export const signup = async (params) => {
 
 export const signout = async () => {
     await request(axios.post, baseUrl + "/logout");
-    localStorage.clear();
+    clearLocalStorageWithTTL();
     sessionStorage.clear();
 };
 

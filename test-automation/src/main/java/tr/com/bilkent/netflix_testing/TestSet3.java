@@ -7,12 +7,12 @@ import org.openqa.selenium.interactions.Actions;
 import lombok.Getter;
 import tr.com.bilkent.netflix_testing.page_object.SignInPage;
 
-public class TestSetThree {
+public class TestSet3 implements TestSet {
 	private final WebDriver driver;
 	@Getter
 	private TestSetResult result;
 
-	public TestSetThree(WebDriver driver) {
+	public TestSet3(WebDriver driver) {
 		this.driver = driver;
 		result = new TestSetResult(0, 1);
 	}

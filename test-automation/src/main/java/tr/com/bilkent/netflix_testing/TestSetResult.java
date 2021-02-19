@@ -13,6 +13,11 @@ public class TestSetResult {
 		numPassed++;
 	}
 
+	public void add(TestSetResult other) {
+		numPassed += other.numPassed;
+		total += other.total;
+	}
+
 	@Override
 	public String toString() {
 		return "Passed: " + numPassed + " \tFailed: " + (total - numPassed) + " \tTotal: " + total + " \tSuccess rate: "

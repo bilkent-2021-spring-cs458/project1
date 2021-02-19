@@ -190,7 +190,10 @@ export default function SignIn() {
                             required
                             className={classes.textField}
                             shouldValidate={shouldValidate}
-                            initialValue={sessionStorage.getItem("email")}
+                            initialValue={
+                                getLocalStorage("email") ||
+                                sessionStorage.getItem("email")
+                            }
                         />
                         <NfValidatedTextField
                             type="password"
@@ -226,6 +229,7 @@ export default function SignIn() {
                                         }
                                         color="default"
                                         name="remember"
+                                        defaultChecked
                                     />
                                 }
                                 className={classes.remember}

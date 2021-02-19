@@ -27,15 +27,21 @@ public final class Utils {
 		}
 	}
 
-	public static void tryValidLogin(WebDriver driver) {
+	public static LandingPage tryValidLogin(WebDriver driver) {
+		return tryValidLogin(driver, true);
+	}
+
+	public static LandingPage tryValidLogin(WebDriver driver, boolean rememberOption) {
 		resetWebDriver(driver);
 		driver.get(Utils.SIGNIN_URL);
 
 		SignInPage signInPage = new SignInPage(driver);
+		signInPage.setRememberOption(rememberOption);
 		LandingPage landingPage = signInPage.loginUser(VALID_EMAIL, VALID_PASSWORD);
 
 		if (!landingPage.isSignedIn()) {
 			throw new IllegalStateException("Initial sign in did not work");
 		}
+		return landingPage;
 	}
 }

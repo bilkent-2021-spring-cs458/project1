@@ -4,10 +4,13 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import tr.com.bilkent.netflix_testing.WrongPageException;
 
 public class LandingPage {
+	private static final By SIGN_IN_BUTTON = By.xpath("//button[contains(string(), 'Sign In')]");
 	private static final By SIGN_OUT_BUTTON = By.xpath("//button[contains(string(), 'Sign out')]");
 
 	protected WebDriver driver;
@@ -30,13 +33,11 @@ public class LandingPage {
 		}
 	}
 
-	public SignInPage signOut() {
+	public void signOut() {
 		WebElement button = driver.findElement(SIGN_OUT_BUTTON);
-		boolean flag = button.isEnabled() && button.isDisplayed();
-		if (flag) {
-			button.click();
-			return new SignInPage(driver);
-		}
-		return null;
+		button.click();
+
+		WebDriverWait wait = new WebDriverWait(driver, 5);
+		wait.until(ExpectedConditions.presenceOfElementLocated(SIGN_IN_BUTTON));
 	}
 }
