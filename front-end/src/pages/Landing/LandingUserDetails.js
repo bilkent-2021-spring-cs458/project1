@@ -41,21 +41,7 @@ export default function LandingUserDetails() {
             case 3:
                 return "Premium";
             default:
-                return (
-                    <>
-                        Not selected
-                        <br />
-                        <div
-                            style={{ textAlign: "center", paddingTop: "20px" }}
-                        >
-                            <NfRedButton
-                                onClick={() => history.push("/signup")}
-                            >
-                                Set Payment Plan
-                            </NfRedButton>
-                        </div>
-                    </>
-                );
+                return "Not selected";
         }
     };
 
@@ -81,6 +67,12 @@ export default function LandingUserDetails() {
                     <br />
                     Receive Special Offers:&nbsp;
                     {userDetails.receive_offers.toString()}
+                    <br />
+                    <div style={{ textAlign: "center", paddingTop: "20px" }}>
+                        <NfRedButton onClick={() => history.push("/signup")}>
+                            Change Payment Plan
+                        </NfRedButton>
+                    </div>
                 </>
             )}
         </Typography>

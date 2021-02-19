@@ -15,7 +15,7 @@ db.create_all()
 
 @app.before_request
 def check_logged_in():
-    if request.endpoint in ['signup', 'login']:
+    if request.endpoint in ['signup', 'login', 'check_email']:
         return
     if 'sign_in_email' not in session:
         return {"error": "NOT_SIGNED_IN"}, 401
@@ -51,6 +51,21 @@ def signup():
 
     session['sign_in_email'] = email
     return {}, 200
+
+
+@app.route('/api/check_email', methods=["POST"])
+def check_email():
+    request_data = request.get_json()
+    try:
+        email = request_data['email']
+    except (KeyError, TypeError):
+        return {"error": "DATA_MISSING"}, 400
+
+    if User.query.filter_by(email=email).first() is not None:
+        msg = 'ACCOUNT_EXISTS'
+    else:
+        msg = 'ACCOUNT_DOES_NOT_EXIST'
+    return {"info": msg}, 200
 
 
 @app.route('/api/set_plan', methods=["POST"])

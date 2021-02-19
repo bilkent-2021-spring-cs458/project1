@@ -12,6 +12,17 @@ export const getUserDetails = async () => {
     return response;
 };
 
+export const checkEmail = async (email) => {
+    const response = await request(axios.post, baseUrl + "/check_email", {
+        email,
+    });
+    if (response.status !== 200) {
+        throw response;
+    }
+
+    return response;
+};
+
 export const signin = async (params) => {
     const response = await request(axios.post, baseUrl + "/login", params);
     if (response.status !== 200) {
@@ -19,6 +30,7 @@ export const signin = async (params) => {
     }
 
     setLocalStorage("isSignedIn", true);
+    setLocalStorage("email", params.email);
     return response;
 };
 
@@ -29,6 +41,7 @@ export const signup = async (params) => {
     }
 
     setLocalStorage("isSignedIn", true);
+    setLocalStorage("email", params.email);
     return response;
 };
 

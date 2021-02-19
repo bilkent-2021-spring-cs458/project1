@@ -1,10 +1,20 @@
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
-import { Box, makeStyles, Typography, withStyles } from "@material-ui/core";
+import {
+    Box,
+    Button,
+    Dialog,
+    DialogActions,
+    DialogTitle,
+    makeStyles,
+    Typography,
+    withStyles,
+} from "@material-ui/core";
 import { ChevronRight } from "@material-ui/icons";
 import NfRedButton from "~/components/NfRedButton";
 import NfValidatedTextField from "~/components/NfValidatedTextField";
 import { validateEmail } from "~/validators";
+import { checkEmail } from "~/service/Service";
 
 const useStyles = makeStyles({
     textField: {
@@ -24,6 +34,12 @@ const WhiteTypography = withStyles({
 export default function LandingSignUpForm() {
     const history = useHistory();
     const [shouldValidate, setShouldValidate] = useState(false);
+
+    const [dialogOpen, setDialogOpen] = useState(false);
+    const dialogClosed = () => {
+        history.push("/signin");
+    };
+
     const submit = (e) => {
         e.preventDefault();
         const email = e.target.email.value;
@@ -33,7 +49,13 @@ export default function LandingSignUpForm() {
         }
 
         sessionStorage.setItem("email", email);
-        history.push("/signup/registration");
+        checkEmail(email).then((response) => {
+            if (response.data.info == "ACCOUNT_EXISTS") {
+                setDialogOpen(true);
+                return;
+            }
+            history.push("/signup/registration");
+        });
     };
 
     const classes = useStyles();
@@ -70,6 +92,23 @@ export default function LandingSignUpForm() {
             >
                 GET STARTED
             </NfRedButton>
+
+            <Dialog
+                open={dialogOpen}
+                onClose={dialogClosed}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+            >
+                <DialogTitle id="alert-dialog-title">
+                    Welcome back! You already have an account. Enter your
+                    password to sign in.
+                </DialogTitle>
+                <DialogActions>
+                    <Button onClick={dialogClosed} color="primary">
+                        Take me to the sign in page
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </form>
     );
 }
