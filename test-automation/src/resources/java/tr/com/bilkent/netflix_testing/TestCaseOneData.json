@@ -1,0 +1,62 @@
+[
+  {
+    "email": "test@test.test",
+    "password": "test",
+    "expected_result": "success"
+  },
+  {
+    "email": "TEST@TEST.TEST",
+    "password": "test",
+    "expected_result": "success"
+  },
+  {
+    "email": "test@test.test",
+    "password": "TeSt",
+    "expected_result": "fail"
+  },
+  {
+    "email": "invalid@invalid.invalid",
+    "password": "test",
+    "expected_result": "fail"
+  },
+  {
+    "email": "test@test.test",
+    "password": "invalid",
+    "expected_result": "fail"
+  },
+  {
+    "email": "invalid@invalid.invalid",
+    "password": "invalid",
+    "expected_result": "fail"
+  },
+  {
+    "email": "sh",
+    "password": "test",
+    "expected_result": "fail"
+  },
+  {
+    "email": "wrongformat`'.,#$",
+    "password": "test",
+    "expected_result": "fail"
+  },
+  {
+    "email": "Length51TooLongAddressTooLongAddress@TooLongAddress",
+    "password": "test",
+    "expected_result": "fail"
+  },
+  {
+    "email": "test@test.test",
+    "password": "sh",
+    "expected_result": "fail"
+  },
+  {
+    "email": "test@test.test",
+    "password": "Length61TooLongPasswordTooLongPasswordTooLongPassword12345678",
+    "expected_result": "fail"
+  },
+  {
+    "email": "Length50TooLongAddressButSuccessful@TooLongAddress",
+    "password": "Length60TooLongPasswordButSuccessfulTooLongPasswordButSucces",
+    "expected_result": "success"
+  }
+]
