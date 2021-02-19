@@ -2,31 +2,33 @@ package tr.com.bilkent.netflix_testing;
 
 import org.openqa.selenium.WebDriver;
 
+import lombok.Getter;
 import tr.com.bilkent.netflix_testing.page_object.LandingPage;
-import tr.com.bilkent.netflix_testing.page_object.SignInPage;
 
 public class TestSetTwo {
-	private WebDriver driver;
+	private final WebDriver driver;
+	@Getter
+	private TestSetResult result;
 
 	public TestSetTwo(WebDriver driver) {
 		this.driver = driver;
+		result = new TestSetResult(0, 2);
 	}
 
-	public double run() {
-		int success = 0;
+	public TestSetResult run() {
 		if (test1()) {
-			success++;
+			result.incrementPassedCases();
 		}
 		if (test2()) {
-			success++;
+			result.incrementPassedCases();
 		}
 
-		return success / 2.0;
+		return result;
 	}
 
 	private boolean test1() {
 		try {
-			init();
+			Utils.tryValidLogin(driver);
 			return tryGoingBack();
 		} catch (Exception e) {
 			return false;
@@ -35,20 +37,10 @@ public class TestSetTwo {
 
 	private boolean test2() {
 		try {
-			init();
+			Utils.tryValidLogin(driver);
 			return tryOpeningSignIn();
 		} catch (Exception e) {
 			return false;
-		}
-	}
-
-	private void init() {
-		Utils.resetWebDriver(driver);
-		driver.get(Utils.SIGNIN_URL);
-		SignInPage signInPage = new SignInPage(driver);
-		LandingPage landingPage = signInPage.loginUser(Utils.VALID_EMAIL, Utils.VALID_PASSWORD);
-		if (!landingPage.isSignedIn()) {
-			throw new IllegalStateException("Initial sign in did not work");
 		}
 	}
 

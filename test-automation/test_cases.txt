@@ -11,12 +11,12 @@ After logging in, pressing back and forward should not allow you to reach the ho
 
 Case 3:
 
-Check for being able to paste the password value into the password field while sign in
+Check for being able to copy the password value into the password field while sign in
 
-(Copy paste from pass fields should be disabled)
+(Copy from pass fields should be disabled)
 
 Case 4:
-SQL injection attack
+SQL injection attack, XSS
 
 sql@t.t
 " or ""="

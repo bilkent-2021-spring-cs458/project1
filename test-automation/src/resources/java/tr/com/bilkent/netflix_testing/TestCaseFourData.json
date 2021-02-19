@@ -1,0 +1,26 @@
+[
+  {
+    "email": "test@test.test' or 1=1; drop table user;--",
+    "password": "test"
+  },
+  {
+    "email": "test@test.test\" or 1=1; drop table user;--",
+    "password": "test"
+  },
+  {
+    "email": "test@test.test",
+    "password": "' or 1=1; drop table user;--"
+  },
+  {
+    "email": "test@test.test",
+    "password": "\" or 1=1; drop table user;--"
+  },
+  {
+    "email": "<script>alert()</script>",
+    "password": "XSStest"
+  },
+  {
+    "email": "XSStest@xss",
+    "password": "<script>alert()</script>"
+  }
+]

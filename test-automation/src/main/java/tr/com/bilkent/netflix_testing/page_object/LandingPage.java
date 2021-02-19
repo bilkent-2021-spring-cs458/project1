@@ -5,6 +5,8 @@ import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
+import tr.com.bilkent.netflix_testing.WrongPageException;
+
 public class LandingPage {
 	private static final By SIGN_OUT_BUTTON = By.xpath("//button[contains(string(), 'Sign out')]");
 
@@ -15,7 +17,7 @@ public class LandingPage {
 
 		PageName currentPage = PageUtil.getPageName(driver.getCurrentUrl());
 		if (currentPage != PageName.LANDING) {
-			throw new IllegalStateException("Not in the landing page");
+			throw new WrongPageException("Not in the landing page");
 		}
 	}
 

@@ -1,43 +1,55 @@
 package tr.com.bilkent.netflix_testing;
 
-import java.util.concurrent.TimeUnit;
-
-import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.interactions.Actions;
 
+import lombok.Getter;
 import tr.com.bilkent.netflix_testing.page_object.SignInPage;
 
 public class TestSetThree {
-    public static void main( String[] args )
-    {
-        WebDriver driver = new FirefoxDriver();
-        driver.get("http://3.140.185.156");
-        Actions action = new Actions(driver);
-        driver.manage().timeouts().implicitlyWait(4, TimeUnit.SECONDS);
+	private final WebDriver driver;
+	@Getter
+	private TestSetResult result;
 
-        driver.findElement(By.xpath("//button[contains(string(), 'Sign In')]")).click();
+	public TestSetThree(WebDriver driver) {
+		this.driver = driver;
+		result = new TestSetResult(0, 1);
+	}
 
-        SignInPage page = new SignInPage(driver);
-        WebElement email = driver.findElement(page.getMailBy());
-        WebElement password = driver.findElement(page.getPasswordBy());
+	public TestSetResult run() {
+		if (test()) {
+			result.incrementPassedCases();
+		}
 
-        //Type the valid password in email field to copy from
-        email.sendKeys("test");
-        action.click(email);
-        action.keyDown(Keys.CONTROL).sendKeys("a").keyUp(Keys.CONTROL).perform();
-        action.keyDown(Keys.CONTROL).sendKeys("c").keyUp(Keys.CONTROL).perform();
-        email.clear();
-        email.sendKeys("test@t.t");
+		return result;
+	}
 
-        action.click(password).keyDown(Keys.CONTROL).sendKeys("v").keyUp(Keys.CONTROL).perform();
-        driver.findElement(By.xpath("//button[contains(string(), 'Sign In')]")).click();
+	private boolean test() {
+		try {
+			Utils.resetWebDriver(driver);
+			driver.get(Utils.SIGNIN_URL);
+			SignInPage page = new SignInPage(driver);
+			Actions action = new Actions(driver);
 
-        driver.quit();
+			page.enterEmail(Utils.VALID_EMAIL);
+			// Clear clipboard by writing email into it
+			action.keyDown(Keys.CONTROL).sendKeys("a").keyUp(Keys.CONTROL).perform();
+			action.keyDown(Keys.CONTROL).sendKeys("c").keyUp(Keys.CONTROL).perform();
 
+			page.enterPassword(Utils.VALID_PASSWORD);
 
-    }
+			action.keyDown(Keys.CONTROL).sendKeys("a").keyUp(Keys.CONTROL).perform();
+			action.keyDown(Keys.CONTROL).sendKeys("c").keyUp(Keys.CONTROL).perform();
+
+			page.enterPassword("");
+			action.keyDown(Keys.CONTROL).sendKeys("v").keyUp(Keys.CONTROL).perform();
+
+			page.clickSignIn();
+			page.waitAndReturnLandingPage();
+			return false;
+		} catch (Exception e) {
+			return true;
+		}
+	}
 }

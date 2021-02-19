@@ -5,43 +5,45 @@ import org.json.JSONObject;
 import org.json.JSONTokener;
 import org.openqa.selenium.WebDriver;
 
+import lombok.Getter;
 import tr.com.bilkent.netflix_testing.page_object.SignInPage;
 
 public class TestSetOne {
 	private final JSONArray data;
+	private final WebDriver driver;
 
-	private WebDriver driver;
-	private int passedCases;
+	@Getter
+	private TestSetResult result;
 
 	public TestSetOne(WebDriver driver) {
 		JSONTokener tokener = new JSONTokener(getClass().getResourceAsStream("TestCaseOneData.json"));
 		data = new JSONArray(tokener);
 		this.driver = driver;
-		passedCases = 0;
+		result = new TestSetResult(0, data.length());
 	}
 
-	public double run() {
+	public TestSetResult run() {
 		data.forEach(obj -> {
-			boolean result = run((JSONObject) obj);
-			if (result) {
-				passedCases++;
+			boolean caseResult = run((JSONObject) obj);
+			if (caseResult) {
+				result.incrementPassedCases();
 			}
 		});
-		return 1.0 * passedCases / data.length();
+		return result;
 	}
 
 	private boolean run(JSONObject data) {
 		Utils.resetWebDriver(driver);
 
-		String result;
+		String caseResult;
 		try {
 			driver.get(Utils.SIGNIN_URL);
 			SignInPage signIn = new SignInPage(driver);
 			signIn.loginUser(data.getString("email"), data.getString("password"));
-			result = "success";
+			caseResult = "success";
 		} catch (Exception e) {
-			result = "fail";
+			caseResult = "fail";
 		}
-		return result.equals(data.getString("expected_result"));
+		return caseResult.equals(data.getString("expected_result"));
 	}
 }
