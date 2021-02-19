@@ -15,3 +15,6 @@ for running this project. Note that JRE 14 is required to run the jar file. The 
 generated in the target folder. Then using the java -jar command, it can be executed (Note that the
 version number in the jar’s name can be different):
 `java -jar target/netflix_testing-0.0.1.jar`
+
+Please note that the environment where this command is executed should be configured for Selenium. Depending on the browser, specific WebDriver should be installed. The generated jar file also allows different WebDrivers to be used. Passing an argument while running will use the specific driver. Available options are opera, chrome, firefox. Chrome is used by default. Example:
+`java -jar target/netflix_testing-0.0.1.jar firefox`
